@@ -1,69 +1,75 @@
-import Image from "next/image";
+import Button from "@/components/ui/Button";
+import CourseCard from "@/components/ui/CourseCard";
+import { getPublishedCourses } from "@/data/sample-courses";
 import styles from "./page.module.css";
 
-export default function Home() {
+export default function HomePage() {
+  const featured = getPublishedCourses().slice(0, 3);
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>
-            To get started, edit the{" "}
-            <code className={styles.code}>page.js</code> file.
-          </h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <>
+      <section className={styles.hero} aria-label="Welcome">
+        <div className={styles.heroMedia} aria-hidden="true" />
+        <div className={styles.heroContent}>
+          <h1 className={styles.brand}>Lou Fitness</h1>
+          <p className={styles.headline}>Get in shape with a smile.</p>
+          <p className={styles.support}>
+            Personal coaching with Lou Shine in Kingston, Jamaica — Cherry Gardens.
+            Weekly routines, online courses, and live sessions with fixed dates.
           </p>
+          <div className={styles.ctaRow}>
+            <Button href="/courses">Browse courses</Button>
+            <Button href="/live-coaching" variant="secondary">
+              Book live coaching
+            </Button>
+          </div>
         </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      <section className={`section ${styles.philosophy}`}>
+        <div className={`container ${styles.philosophyInner}`}>
+          <p className={styles.philosophyQuote}>
+            Start your weekly fitness routine — and keep showing up for yourself.
+          </p>
+          <div className={styles.philosophyMeta}>
+            <span className="eyebrow">Philosophy</span>
+            <p>
+              Example copy: movement should feel welcoming. Lou focuses on steady
+              habits, clear guidance, and sessions you can look forward to —
+              outdoors, online, or one-to-one.
+            </p>
+          </div>
         </div>
-      </main>
-    </div>
+      </section>
+
+      <section className="section">
+        <div className="container">
+          <div className={styles.offersHeader}>
+            <span className="eyebrow">Selected offers</span>
+            <h2>Example courses &amp; sessions</h2>
+            <p className="lead">
+              Sample listings for development. Prices, dates, and places are
+              placeholders until Supabase content is connected.
+            </p>
+          </div>
+          <div className={styles.grid}>
+            {featured.map((course) => (
+              <CourseCard key={course.id} course={course} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className={`section-tight ${styles.ctaBand}`}>
+        <div className="container">
+          <h2>Ready when you are</h2>
+          <p className="lead">
+            Create an account to book fixed dates and pay in advance once payments
+            are connected.
+          </p>
+          <Button href="/register">Create account</Button>
+        </div>
+      </section>
+    </>
   );
 }

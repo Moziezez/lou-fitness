@@ -1,0 +1,75 @@
+.footer {
+  margin-top: auto;
+  border-top: 1px solid var(--color-border);
+  background: color-mix(in srgb, var(--color-espresso) 92%, #1a140f);
+  color: var(--color-text-inverse);
+}
+
+.inner {
+  display: grid;
+  gap: var(--space-6);
+  padding-block: var(--space-7);
+}
+
+.brand {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  margin-bottom: var(--space-3);
+}
+
+.blurb {
+  max-width: 28rem;
+  color: color-mix(in srgb, var(--color-text-inverse) 72%, transparent);
+}
+
+.grid {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.colTitle {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-sand);
+  margin-bottom: var(--space-3);
+}
+
+.list {
+  list-style: none;
+  display: grid;
+  gap: var(--space-2);
+}
+
+.list a {
+  color: color-mix(in srgb, var(--color-text-inverse) 78%, transparent);
+  transition: color var(--duration) var(--ease-out);
+}
+
+.list a:hover {
+  color: var(--color-text-inverse);
+}
+
+.bottom {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  justify-content: space-between;
+  padding-block: var(--space-4);
+  border-top: 1px solid color-mix(in srgb, white 12%, transparent);
+  font-size: var(--text-xs);
+  color: color-mix(in srgb, var(--color-text-inverse) 55%, transparent);
+}
+
+@media (min-width: 760px) {
+  .inner {
+    grid-template-columns: 1.4fr 1fr;
+    align-items: start;
+  }
+
+  .grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}

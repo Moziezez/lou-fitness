@@ -1,150 +1,169 @@
-.page {
-  --background: #fafafa;
-  --foreground: #fff;
-
-  --text-primary: #000;
-  --text-secondary: #666;
-
-  --button-primary-hover: #383838;
-  --button-secondary-hover: #f2f2f2;
-  --button-secondary-border: #ebebeb;
-
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-geist-sans);
-  background-color: var(--background);
+.hero {
+  position: relative;
+  min-height: calc(100svh - var(--header-height));
+  display: grid;
+  align-items: end;
+  overflow: hidden;
+  color: var(--color-text-inverse);
 }
 
-.main {
-  display: flex;
-  flex: 1;
-  width: 100%;
-  max-width: 800px;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: space-between;
-  background-color: var(--foreground);
-  padding: 120px 60px;
+.heroMedia {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(44, 33, 24, 0.25) 0%, rgba(44, 33, 24, 0.72) 70%, rgba(44, 33, 24, 0.88) 100%),
+    linear-gradient(120deg, #8a6a4a 0%, #6f7f5c 45%, #3d2e22 100%);
+  background-size: cover;
+  transform: scale(1.02);
+  animation: heroSettle 1.4s var(--ease-out) both;
 }
 
-.intro {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  text-align: left;
-  gap: 24px;
+.heroMedia::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 70% 30%, rgba(216, 195, 165, 0.22), transparent 40%),
+    repeating-linear-gradient(
+      -12deg,
+      transparent,
+      transparent 18px,
+      rgba(255, 255, 255, 0.015) 18px,
+      rgba(255, 255, 255, 0.015) 19px
+    );
 }
 
-.intro h1 {
-  max-width: 320px;
-  font-size: 40px;
+.heroContent {
+  position: relative;
+  z-index: 1;
+  width: min(100% - 2rem, var(--container));
+  margin-inline: auto;
+  padding-block: var(--space-8) var(--space-7);
+  animation: riseIn 0.9s var(--ease-out) 0.15s both;
+}
+
+.brand {
+  font-family: var(--font-display);
+  font-size: var(--text-brand);
   font-weight: 600;
-  line-height: 48px;
-  letter-spacing: -2.4px;
-  text-wrap: balance;
-  color: var(--text-primary);
+  line-height: 0.95;
+  letter-spacing: 0.01em;
+  margin-bottom: var(--space-4);
+  color: var(--color-text-inverse);
 }
 
-.intro p {
-  max-width: 440px;
-  font-size: 18px;
-  line-height: 32px;
-  text-wrap: balance;
-  color: var(--text-secondary);
-}
-
-.intro a {
+.headline {
+  max-width: 18ch;
+  font-size: clamp(1.5rem, 3.2vw, 2.15rem);
   font-weight: 500;
-  color: var(--text-primary);
+  line-height: var(--leading-snug);
+  margin-bottom: var(--space-4);
+  color: color-mix(in srgb, var(--color-text-inverse) 94%, var(--color-sand));
 }
 
-.ctas {
+.support {
+  max-width: 34rem;
+  margin-bottom: var(--space-6);
+  font-size: var(--text-lg);
+  color: color-mix(in srgb, var(--color-text-inverse) 78%, transparent);
+}
+
+.ctaRow {
   display: flex;
-  flex-direction: row;
-  width: 100%;
-  max-width: 440px;
-  gap: 16px;
-  font-size: 14px;
+  flex-wrap: wrap;
+  gap: var(--space-3);
 }
 
-.ctas a {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 40px;
-  padding: 0 16px;
-  border-radius: 128px;
-  border: 1px solid transparent;
-  transition: 0.2s;
-  cursor: pointer;
-  width: fit-content;
-  font-weight: 500;
+.ctaRow a:first-child {
+  background: var(--color-clay);
+  color: var(--color-espresso);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
 }
 
-a.primary {
-  background: var(--text-primary);
-  color: var(--background);
-  gap: 8px;
+.ctaRow a:first-child:hover {
+  background: var(--color-sand);
 }
 
-a.secondary {
-  border-color: var(--button-secondary-border);
+.ctaRow a:last-child {
+  border-color: color-mix(in srgb, white 35%, transparent);
+  color: var(--color-text-inverse);
 }
 
-/* Enable hover only on non-touch devices */
-@media (hover: hover) and (pointer: fine) {
-  a.primary:hover {
-    background: var(--button-primary-hover);
-    border-color: transparent;
-  }
-
-  a.secondary:hover {
-    background: var(--button-secondary-hover);
-    border-color: transparent;
-  }
+.ctaRow a:last-child:hover {
+  background: color-mix(in srgb, white 10%, transparent);
 }
 
-@media (max-width: 600px) {
-  .main {
-    padding: 48px 24px;
-  }
-
-  .intro {
-    gap: 16px;
-  }
-
-  .intro h1 {
-    font-size: 32px;
-    line-height: 40px;
-    letter-spacing: -1.92px;
-  }
+.philosophy {
+  background: color-mix(in srgb, var(--color-bg-elevated) 70%, transparent);
+  border-block: 1px solid var(--color-border);
 }
 
-@media (prefers-color-scheme: dark) {
-  .logo {
-    filter: invert();
+.philosophyInner {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.philosophyQuote {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 3.5vw, 2.6rem);
+  line-height: var(--leading-snug);
+  color: var(--color-espresso);
+  max-width: 22ch;
+}
+
+.philosophyMeta {
+  max-width: 28rem;
+}
+
+.offersHeader {
+  display: grid;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+}
+
+.grid {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.ctaBand {
+  text-align: center;
+}
+
+.ctaBand p {
+  margin-inline: auto;
+  margin-bottom: var(--space-5);
+}
+
+@keyframes heroSettle {
+  from {
+    transform: scale(1.06);
+    opacity: 0.7;
   }
-
-  .page {
-    --background: #000;
-    --foreground: #000;
-
-    --text-primary: #ededed;
-    --text-secondary: #999;
-
-    --button-primary-hover: #ccc;
-    --button-secondary-hover: #1a1a1a;
-    --button-secondary-border: #1a1a1a;
+  to {
+    transform: scale(1.02);
+    opacity: 1;
   }
 }
 
-.code {
-  font-family: var(--font-geist-mono);
-  font-size: 0.9em;
-  background: color-mix(in srgb, currentColor 8%, transparent);
-  padding: 0.1em 0.4em;
-  border-radius: 6px;
+@keyframes riseIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (min-width: 760px) {
+  .philosophyInner {
+    grid-template-columns: 1.1fr 0.9fr;
+    align-items: end;
+  }
+
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }

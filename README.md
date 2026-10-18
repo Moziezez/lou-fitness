@@ -1,36 +1,54 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Lou Fitness
 
-## Getting Started
+Personal coaching platform for **Lou Shine** (Kingston, Jamaica / Cherry Gardens).  
+Next.js (App Router, JavaScript) · Supabase · swappable payments (PayNowPro / Fygaro / test).
 
-First, run the development server:
+## Current status (Milestone 1)
+
+- Next.js app scaffold and folder structure
+- Warm earth-tone design system (CSS variables + CSS Modules)
+- Public pages with **example** content
+- Payment provider interface + adapters (test live; PayNowPro/Fygaro stubs)
+- Draft SQL schema under `supabase/migrations/`
+
+**Not yet:** live Supabase Auth, real bookings, confirmed payments, customer/admin dashboards.
+
+See [IMPLEMENTATION.md](./IMPLEMENTATION.md) and [docs/PAYMENTS.md](./docs/PAYMENTS.md).
+
+## Setup
 
 ```bash
+npm install
+cp .env.example .env.local
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Environment
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Copy `.env.example` → `.env.local`. Never commit secrets.
 
-## Learn More
+| Variable | Purpose |
+|----------|---------|
+| `NEXT_PUBLIC_SUPABASE_*` | Browser-safe Supabase keys |
+| `SUPABASE_SERVICE_ROLE_KEY` | Server only |
+| `PAYMENT_PROVIDER` | `test` \| `paynowpro` \| `fygaro` |
+| Provider secrets | See `.env.example` |
 
-To learn more about Next.js, take a look at the following resources:
+## Design
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Inspired by [Zen Yogi](https://zen-yogi.co/)’s calm wellness layout. Cool blues are replaced with light clay/sand browns. Display font: Cormorant Garamond · UI font: Outfit.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Deploy (Vercel)
 
-## Deploy on Vercel
+1. Push to Git and import the repo in Vercel.
+2. Set environment variables from `.env.example`.
+3. Deploy. Add webhook URLs pointing to your production domain once payments are configured.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Scripts
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `npm run dev` — local development
+- `npm run build` — production build
+- `npm run start` — serve build
+- `npm run lint` — ESLint
