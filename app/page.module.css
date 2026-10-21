@@ -127,6 +127,12 @@
   gap: var(--space-5);
 }
 
+.offersMore {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-6);
+}
+
 .ctaBand {
   text-align: center;
 }

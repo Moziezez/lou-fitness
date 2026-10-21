@@ -2,11 +2,15 @@ import Image from "next/image";
 import Button from "@/components/ui/Button";
 import heroImage from "@/public/images/hero-lou.jpg";
 import CourseCard from "@/components/ui/CourseCard";
-import { getPublishedCourses } from "@/data/sample-courses";
+import { getPublishedCourses } from "@/lib/courses/public";
 import styles from "./page.module.css";
 
-export default function HomePage() {
-  const featured = getPublishedCourses().slice(0, 3);
+// Newest published courses first, from Supabase.
+const FEATURED_COUNT = 3;
+
+export default async function HomePage() {
+  const courses = await getPublishedCourses();
+  const featured = courses.slice(0, FEATURED_COUNT);
 
   return (
     <>
@@ -58,17 +62,28 @@ export default function HomePage() {
         <div className="container">
           <div className={styles.offersHeader}>
             <span className="eyebrow">Selected offers</span>
-            <h2>Example courses &amp; sessions</h2>
+            <h2>Courses &amp; sessions</h2>
             <p className="lead">
-              Sample listings for development. Prices, dates, and places are
-              placeholders until Supabase content is connected.
+              Online courses and live coaching with fixed dates. Pick one that
+              fits your week.
             </p>
           </div>
-          <div className={styles.grid}>
-            {featured.map((course) => (
-              <CourseCard key={course.id} course={course} />
-            ))}
-          </div>
+          {featured.length === 0 ? (
+            <p className="lead">New courses are coming soon. Check back shortly.</p>
+          ) : (
+            <div className={styles.grid}>
+              {featured.map((course) => (
+                <CourseCard key={course.id} course={course} />
+              ))}
+            </div>
+          )}
+          {courses.length > FEATURED_COUNT ? (
+            <div className={styles.offersMore}>
+              <Button href="/courses" variant="secondary">
+                See all courses
+              </Button>
+            </div>
+          ) : null}
         </div>
       </section>
 
