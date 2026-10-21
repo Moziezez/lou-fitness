@@ -5,10 +5,14 @@ export async function proxy(request) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
+  // The proxy runs on every request, so throwing here would turn the whole
+  // site into a 500. Skip the session refresh instead; code that actually
+  // needs Supabase still fails loudly in lib/supabase.
   if (!url || !publishableKey) {
-    throw new Error(
-      "Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY.",
+    console.error(
+      "Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY; skipping Supabase session refresh.",
     );
+    return NextResponse.next({ request });
   }
 
   let response = NextResponse.next({ request });
