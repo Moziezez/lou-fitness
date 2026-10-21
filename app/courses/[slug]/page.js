@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Button from "@/components/ui/Button";
+import SeatCount from "@/components/ui/SeatCount";
 import { formatPrice, formatSessionRange } from "@/data/sample-courses";
 import { courseFormatLabel } from "@/lib/courses/formats";
 import { getPublishedCourseBySlug, getPublishedCourses } from "@/lib/courses/public";
@@ -63,12 +64,7 @@ export default async function CourseDetailPage({ params }) {
                     <strong>{formatSessionRange(session)}</strong>
                     <div className={styles.metaRow}>
                       {session.location ? <span>{session.location}</span> : null}
-                      {session.capacity ? (
-                        <span>
-                          Up to {session.capacity}{" "}
-                          {session.capacity === 1 ? "participant" : "participants"}
-                        </span>
-                      ) : null}
+                      <SeatCount sessionId={session.id} capacity={session.capacity} />
                     </div>
                     <Button href={`/login?next=/courses/${course.slug}&session=${session.id}`}>
                       Book &amp; pay (coming soon)

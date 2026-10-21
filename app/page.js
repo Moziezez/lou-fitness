@@ -1,4 +1,6 @@
+import Image from "next/image";
 import Button from "@/components/ui/Button";
+import heroImage from "@/public/images/hero-lou.jpg";
 import CourseCard from "@/components/ui/CourseCard";
 import { getPublishedCourses } from "@/data/sample-courses";
 import styles from "./page.module.css";
@@ -9,7 +11,17 @@ export default function HomePage() {
   return (
     <>
       <section className={styles.hero} aria-label="Welcome">
-        <div className={styles.heroMedia} aria-hidden="true" />
+        <div className={styles.heroMedia} aria-hidden="true">
+          <Image
+            src={heroImage}
+            alt=""
+            fill
+            preload
+            sizes="100vw"
+            placeholder="blur"
+            className={styles.heroImage}
+          />
+        </div>
         <div className={styles.heroContent}>
           <h1 className={styles.brand}>Lou Fitness</h1>
           <p className={styles.headline}>Get in shape with a smile.</p>
