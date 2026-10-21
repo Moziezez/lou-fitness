@@ -1,33 +1,36 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Button from "@/components/ui/Button";
-import {
-  formatPrice,
-  formatSessionRange,
-  getCourseBySlug,
-  getPublishedCourses,
-  seatsLeft,
-} from "@/data/sample-courses";
+import { formatPrice, formatSessionRange } from "@/data/sample-courses";
+import { courseFormatLabel } from "@/lib/courses/formats";
+import { getPublishedCourseBySlug, getPublishedCourses } from "@/lib/courses/public";
 import styles from "../../pages.module.css";
 
-export function generateStaticParams() {
-  return getPublishedCourses().map((course) => ({ slug: course.slug }));
+// Cache Components requires at least one param. With no published courses yet,
+// a placeholder keeps the build working; it renders the 404 page.
+export async function generateStaticParams() {
+  const courses = await getPublishedCourses();
+  if (courses.length === 0) return [{ slug: "coming-soon" }];
+  return courses.map((course) => ({ slug: course.slug }));
 }
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const course = getCourseBySlug(slug);
+  const course = await getPublishedCourseBySlug(slug);
   if (!course) return { title: "Course" };
   return {
     title: course.title,
-    description: course.summary,
+    description: course.summary ?? undefined,
   };
 }
 
 export default async function CourseDetailPage({ params }) {
   const { slug } = await params;
-  const course = getCourseBySlug(slug);
+  const course = await getPublishedCourseBySlug(slug);
   if (!course) notFound();
+
+  const format = courseFormatLabel(course.format);
+  const price = formatPrice(course.priceCents, course.currency);
 
   return (
     <>
@@ -36,10 +39,10 @@ export default async function CourseDetailPage({ params }) {
           <p className={styles.note}>
             <Link href="/courses">Courses</Link> / {course.title}
           </p>
-          <span className={styles.badge}>{course.format}</span>
+          <span className={styles.badge}>{format}</span>
           <h1>{course.title}</h1>
-          <p className="lead">{course.summary}</p>
-          <p className={styles.price}>{formatPrice(course.priceCents, course.currency)}</p>
+          {course.summary ? <p className="lead">{course.summary}</p> : null}
+          <p className={styles.price}>{price}</p>
         </div>
       </section>
 
@@ -49,47 +52,44 @@ export default async function CourseDetailPage({ params }) {
             <h2>About this offer</h2>
             <p>{course.description}</p>
             <h2>Fixed dates</h2>
-            <ul className={styles.list}>
-              {course.sessions.map((session) => {
-                const left = seatsLeft(session);
-                return (
+            {course.sessions.length === 0 ? (
+              <p className={styles.note}>
+                Dates for this offer will be announced soon.
+              </p>
+            ) : (
+              <ul className={styles.list}>
+                {course.sessions.map((session) => (
                   <li key={session.id} className={styles.listItem}>
                     <strong>{formatSessionRange(session)}</strong>
                     <div className={styles.metaRow}>
-                      <span>{session.location}</span>
-                      <span>
-                        {left > 0 ? `${left} seat${left === 1 ? "" : "s"} left` : "Full (example)"}
-                      </span>
+                      {session.location ? <span>{session.location}</span> : null}
+                      {session.capacity ? (
+                        <span>
+                          Up to {session.capacity}{" "}
+                          {session.capacity === 1 ? "participant" : "participants"}
+                        </span>
+                      ) : null}
                     </div>
-                    {left > 0 ? (
-                      <Button href={`/login?next=/courses/${course.slug}&session=${session.id}`}>
-                        Book &amp; pay (coming soon)
-                      </Button>
-                    ) : (
-                      <span className={styles.note}>Unavailable for this example slot.</span>
-                    )}
+                    <Button href={`/login?next=/courses/${course.slug}&session=${session.id}`}>
+                      Book &amp; pay (coming soon)
+                    </Button>
                   </li>
-                );
-              })}
-            </ul>
+                ))}
+              </ul>
+            )}
             <p className={styles.note}>
-              Booking and payment checkout will connect in a later milestone. Auth
-              and provider credentials are required first.
+              Booking and payment checkout will connect in a later milestone.
             </p>
           </div>
 
           <aside className={styles.panel}>
             <h2>Details</h2>
             <p>
-              <strong>Format:</strong> {course.format}
+              <strong>Format:</strong> {format}
             </p>
             <p>
-              <strong>Price:</strong> {formatPrice(course.priceCents, course.currency)}
+              <strong>Price:</strong> {price}
             </p>
-            <p>
-              <strong>Timezone:</strong> stored per session (America/Jamaica in samples)
-            </p>
-            <p className={styles.note}>Example data only.</p>
           </aside>
         </div>
       </section>
