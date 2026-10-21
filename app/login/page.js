@@ -13,6 +13,8 @@ const linkErrors = {
     "That confirmation link is invalid or has expired. Try signing in, or register again to get a new link.",
   reset_link_invalid:
     "That reset link is invalid or has expired. Please request a new one.",
+  reset_link_other_browser:
+    "Please open the reset link in the same browser where you requested it, or request a new one.",
 };
 
 async function LoginFormWithParams({ searchParams }) {
@@ -21,6 +23,9 @@ async function LoginFormWithParams({ searchParams }) {
     <LoginForm
       next={safeRedirectPath(params.next)}
       initialError={linkErrors[params.error]}
+      initialMessage={
+        params.confirmed ? "Your email is confirmed. Please sign in." : undefined
+      }
     />
   );
 }

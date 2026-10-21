@@ -2,6 +2,19 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse } from "next/server";
 
 export async function proxy(request) {
+  // When a redirect URL isn't on Supabase's allowlist, email links fall back
+  // to the Site URL root. Hand them to the confirm route instead of silently
+  // dropping the code.
+  const { pathname: requestPath, searchParams } = request.nextUrl;
+  if (
+    requestPath === "/" &&
+    (searchParams.has("code") || searchParams.has("token_hash") || searchParams.has("error_code"))
+  ) {
+    const confirmUrl = request.nextUrl.clone();
+    confirmUrl.pathname = "/auth/confirm";
+    return NextResponse.redirect(confirmUrl);
+  }
+
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 

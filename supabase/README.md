@@ -73,7 +73,11 @@ Registrierung, Login und Passwort-Reset laufen über Server Actions in
      `{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=recovery&next=/reset-password/update`
 
    Ohne diese Änderung funktionieren die Standardlinks (`?code=…`) ebenfalls,
-   aber nur im selben Browser, in dem das Formular abgeschickt wurde.
+   aber nur im selben Browser, in dem das Formular abgeschickt wurde. Wird ein
+   Bestätigungslink woanders geöffnet, ist die E-Mail trotzdem bestätigt; die
+   Route leitet dann auf `/login?confirmed=1` („bitte anmelden“) weiter. Landet
+   ein Link mangels Redirect-URL-Eintrag auf `/`, reicht `proxy.js` ihn an
+   `/auth/confirm` weiter.
 3. **E-Mail-Versand**: Der eingebaute Supabase-Mailer ist nur für Tests gedacht,
    stark limitiert und stellt nur an Adressen von Mitgliedern des
    Supabase-Teams zu. Für echte Kundinnen und Kunden unter

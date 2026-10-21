@@ -10,6 +10,7 @@ const OTP_TYPES = new Set(["signup", "email", "recovery", "invite", "email_chang
  * - `?token_hash=…&type=…` from the customised email templates (works in any
  *   browser), see supabase/README.md
  * - `?code=…` from Supabase's default templates (PKCE; same browser only)
+ * Supabase reports failed links (expired, already used) as `?error_code=…`.
  */
 export async function GET(request) {
   const { searchParams, origin } = new URL(request.url);
@@ -20,22 +21,32 @@ export async function GET(request) {
     searchParams.get("next"),
     type === "recovery" ? "/reset-password/update" : "/dashboard",
   );
+  const isRecovery = type === "recovery" || next.startsWith("/reset-password");
+  const toLogin = (query) => NextResponse.redirect(`${origin}/login?${query}`);
+
+  if (searchParams.has("error_code") || searchParams.has("error")) {
+    return toLogin(`error=${isRecovery ? "reset_link_invalid" : "confirm_link_invalid"}`);
+  }
 
   const supabase = await createClient();
-  let error = new Error("missing token");
 
   if (tokenHash && OTP_TYPES.has(type)) {
-    ({ error } = await supabase.auth.verifyOtp({ type, token_hash: tokenHash }));
-  } else if (code) {
-    ({ error } = await supabase.auth.exchangeCodeForSession(code));
+    const { error } = await supabase.auth.verifyOtp({ type, token_hash: tokenHash });
+    if (!error) return NextResponse.redirect(`${origin}${next}`);
+    return toLogin(`error=${isRecovery ? "reset_link_invalid" : "confirm_link_invalid"}`);
   }
 
-  if (error) {
-    const reason = type === "recovery" || next.startsWith("/reset-password")
-      ? "reset_link_invalid"
-      : "confirm_link_invalid";
-    return NextResponse.redirect(`${origin}/login?error=${reason}`);
+  if (code) {
+    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    if (!error) return NextResponse.redirect(`${origin}${next}`);
+
+    // Supabase only issues a code after it has verified the link, so the
+    // email is confirmed even when the exchange fails. That happens when the
+    // link is opened in another browser or mail app than the one used to
+    // register (the PKCE verifier cookie is missing there).
+    console.warn("Auth code exchange failed", error.code ?? error.name, error.message);
+    return toLogin(isRecovery ? "error=reset_link_other_browser" : "confirmed=1");
   }
 
-  return NextResponse.redirect(`${origin}${next}`);
+  return toLogin(`error=${isRecovery ? "reset_link_invalid" : "confirm_link_invalid"}`);
 }

@@ -6,10 +6,11 @@ import FormMessage from "@/components/auth/FormMessage";
 import { signIn } from "@/lib/auth/actions";
 import styles from "@/app/pages.module.css";
 
-/** @param {{ next?: string, initialError?: string }} props */
-export default function LoginForm({ next = "/dashboard", initialError }) {
+/** @param {{ next?: string, initialError?: string, initialMessage?: string }} props */
+export default function LoginForm({ next = "/dashboard", initialError, initialMessage }) {
   const [state, formAction, pending] = useActionState(signIn, {
     error: initialError,
+    message: initialMessage,
   });
 
   return (
