@@ -37,8 +37,46 @@ export async function proxy(request) {
     },
   });
 
-  await supabase.auth.getClaims();
+  const { data } = await supabase.auth.getClaims();
+  const signedIn = Boolean(data?.claims?.sub);
+  const { pathname } = request.nextUrl;
+
+  // Convenience redirects only. Pages still check the user (and the admin
+  // role) on the server themselves.
+  if (!signedIn && PROTECTED_PATHS.some((path) => matchesPath(pathname, path))) {
+    const loginUrl = request.nextUrl.clone();
+    loginUrl.pathname = "/login";
+    loginUrl.search = "";
+    if (pathname !== "/reset-password/update") {
+      loginUrl.searchParams.set("next", pathname);
+    } else {
+      loginUrl.searchParams.set("error", "reset_link_invalid");
+    }
+    return redirectWithCookies(loginUrl, response);
+  }
+
+  if (signedIn && GUEST_ONLY_PATHS.some((path) => matchesPath(pathname, path))) {
+    const dashboardUrl = request.nextUrl.clone();
+    dashboardUrl.pathname = "/dashboard";
+    dashboardUrl.search = "";
+    return redirectWithCookies(dashboardUrl, response);
+  }
+
   return response;
+}
+
+const PROTECTED_PATHS = ["/dashboard", "/admin", "/reset-password/update"];
+const GUEST_ONLY_PATHS = ["/login", "/register"];
+
+function matchesPath(pathname, path) {
+  return pathname === path || pathname.startsWith(`${path}/`);
+}
+
+// Keep any refreshed session cookies when redirecting.
+function redirectWithCookies(url, response) {
+  const redirect = NextResponse.redirect(url);
+  response.cookies.getAll().forEach((cookie) => redirect.cookies.set(cookie));
+  return redirect;
 }
 
 export const config = {

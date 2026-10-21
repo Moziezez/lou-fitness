@@ -53,7 +53,7 @@ The sample data doesn't match the DB schema yet, so map the fields when you swit
 
 ## Status
 
-Milestones 1 and 2 are done: scaffold, design system, public pages with example content, payment interface, and the Supabase schema with RLS, applied and tested. The pages still read from `data/sample-courses.js`. The following are still **UI shells or not started**: Supabase Auth on login/register/reset, real bookings, payment flow and webhooks, the customer dashboard, the admin area, and real legal pages (imprint, privacy, terms and withdrawal are placeholders). See the milestone table in IMPLEMENTATION.md.
+Milestones 1–3 are done: scaffold, design system, public pages with example content, payment interface, the Supabase schema with RLS, and Supabase Auth (register with email confirmation, login, logout, password reset; `lib/auth/`, `app/auth/confirm`; `proxy.js` redirects signed-out users away from `/dashboard`, `/admin`, `/reset-password/update`, and pages re-check via `getCurrentUser()`). The pages still read from `data/sample-courses.js`. The following are still **UI shells or not started**: real bookings, payment flow and webhooks, the customer dashboard, the admin area, and real legal pages (imprint, privacy, terms and withdrawal are placeholders). See the milestone table in IMPLEMENTATION.md.
 
 ## Styling
 

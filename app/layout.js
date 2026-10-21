@@ -1,5 +1,7 @@
 import { Cormorant_Garamond, Outfit } from "next/font/google";
+import { Suspense } from "react";
 import Header from "@/components/layout/Header";
+import HeaderAccount, { HeaderAccountSignedOut } from "@/components/layout/HeaderAccount";
 import Footer from "@/components/layout/Footer";
 import "./globals.css";
 
@@ -33,7 +35,18 @@ export default function RootLayout({ children }) {
         <a className="skip-link" href="#main">
           Skip to content
         </a>
-        <Header />
+        <Header
+          account={
+            <Suspense fallback={<HeaderAccountSignedOut />}>
+              <HeaderAccount variant="desktop" />
+            </Suspense>
+          }
+          mobileAccount={
+            <Suspense fallback={null}>
+              <HeaderAccount variant="mobile" />
+            </Suspense>
+          }
+        />
         <main id="main" className="site-main">
           {children}
         </main>

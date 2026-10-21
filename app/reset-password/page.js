@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Button from "@/components/ui/Button";
+import ResetPasswordForm from "@/components/auth/ResetPasswordForm";
 import styles from "../pages.module.css";
 
 export const metadata = {
@@ -12,18 +12,11 @@ export default function ResetPasswordPage() {
       <div className={styles.panel}>
         <h1>Reset password</h1>
         <p className={styles.note}>
-          Password reset emails will be sent through Supabase Auth once configured.
+          Enter your email and we&apos;ll send you a link to choose a new
+          password.
         </p>
-        <form className={styles.form}>
-          <label className={styles.label}>
-            Email
-            <input className={styles.input} type="email" name="email" autoComplete="email" required />
-          </label>
-          <Button type="submit" fullWidth>
-            Send reset link (coming soon)
-          </Button>
-        </form>
-        <p className={styles.note} style={{ marginTop: "1rem" }}>
+        <ResetPasswordForm />
+        <p className={`${styles.note} ${styles.authLinks}`}>
           <Link href="/login">Back to sign in</Link>
         </p>
       </div>

@@ -37,7 +37,7 @@ Simulierte Testzahlungen gelten **niemals** als echte, bestätigte Zahlungen.
 |---|---------------------------------|---------------|
 | 1 | Repo, Struktur, Design, Public  | **erledigt**  |
 | 2 | Supabase-Schema + RLS           | **erledigt**  |
-| 3 | Auth + geschützte Bereiche      | ausstehend    |
+| 3 | Auth + geschützte Bereiche      | **erledigt**  |
 | 4 | Kurse, Termine, Buchungen       | ausstehend    |
 | 5 | Zahlungsflow + Webhooks         | ausstehend    |
 | 6 | Kunden-Dashboard                | ausstehend    |

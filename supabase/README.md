@@ -53,3 +53,28 @@ Angewendete Migrationen nicht mehr bearbeiten. Für Änderungen eine neue Datei
 - Webhook-Idempotenz über `eventId` (eigene Event-Tabelle, Meilenstein 5);
   `(provider, external_reference)` ist bereits eindeutig.
 - Kunden sehen ihre eigenen Zahlungen noch nicht (Dashboard, Meilenstein 6).
+
+## Auth-Einstellungen im Dashboard
+
+Registrierung, Login und Passwort-Reset laufen über Server Actions in
+`lib/auth/actions.js`; Links aus Auth-E-Mails landen auf `app/auth/confirm/route.js`.
+
+1. **Authentication → URL Configuration**
+   - *Site URL*: die Produktions-URL (Vercel-Domain).
+   - *Redirect URLs*: `https://<vercel-domain>/**` und `http://localhost:3000/**`
+     (plus ggf. `https://*-<team>.vercel.app/**` für Preview-Deployments).
+     Ohne Eintrag ersetzt Supabase den Link durch die Site URL.
+2. **Authentication → Emails → Templates** (empfohlen, damit Bestätigungslinks
+   auch in einem anderen Browser/Mail-App funktionieren):
+   - *Confirm signup*: `{{ .ConfirmationURL }}` ersetzen durch
+     `{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email&next=/dashboard`
+   - *Reset password*: `{{ .ConfirmationURL }}` ersetzen durch
+     `{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=recovery&next=/reset-password/update`
+
+   Ohne diese Änderung funktionieren die Standardlinks (`?code=…`) ebenfalls,
+   aber nur im selben Browser, in dem das Formular abgeschickt wurde.
+3. **E-Mail-Versand**: Der eingebaute Supabase-Mailer ist nur für Tests gedacht,
+   stark limitiert und stellt nur an Adressen von Mitgliedern des
+   Supabase-Teams zu. Für echte Kundinnen und Kunden unter
+   **Authentication → Emails → SMTP Settings** einen eigenen SMTP-Anbieter
+   eintragen (z. B. Resend, Postmark, Brevo).

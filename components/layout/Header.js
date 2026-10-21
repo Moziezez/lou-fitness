@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import Button from "@/components/ui/Button";
 import styles from "./Header.module.css";
 
 const links = [
@@ -13,7 +12,11 @@ const links = [
   { href: "/contact", label: "Contact" },
 ];
 
-export default function Header() {
+/**
+ * @param {{ account: React.ReactNode, mobileAccount: React.ReactNode }} props
+ * Server-rendered, auth-dependent links (see HeaderAccount).
+ */
+export default function Header({ account, mobileAccount }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
@@ -37,12 +40,7 @@ export default function Header() {
         </nav>
 
         <div className={styles.actions}>
-          <Button href="/login" variant="ghost" className="hide-mobile-cta">
-            Sign in
-          </Button>
-          <Button href="/register" variant="primary">
-            Get started
-          </Button>
+          {account}
           <button
             type="button"
             className={styles.menuToggle}
@@ -65,9 +63,7 @@ export default function Header() {
             {link.label}
           </Link>
         ))}
-        <Link href="/login" onClick={() => setOpen(false)}>
-          Sign in
-        </Link>
+        <div onClick={() => setOpen(false)}>{mobileAccount}</div>
       </div>
     </header>
   );

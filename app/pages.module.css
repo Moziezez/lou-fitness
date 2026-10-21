@@ -152,3 +152,26 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+.formError,
+.formSuccess {
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+}
+
+.formError {
+  border: 1px solid color-mix(in srgb, var(--color-danger) 35%, transparent);
+  background: color-mix(in srgb, var(--color-danger) 8%, white);
+  color: var(--color-danger);
+}
+
+.formSuccess {
+  border: 1px solid color-mix(in srgb, var(--color-success) 35%, transparent);
+  background: color-mix(in srgb, var(--color-success) 10%, white);
+  color: var(--color-success);
+}
+
+.authLinks {
+  margin-top: var(--space-4);
+}
