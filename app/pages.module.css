@@ -108,6 +108,16 @@
   text-transform: uppercase;
 }
 
+a.badgeLink {
+  color: var(--color-olive);
+  transition: background-color 0.15s ease;
+}
+
+a.badgeLink:hover,
+a.badgeLink:focus-visible {
+  background: color-mix(in srgb, var(--color-olive) 28%, white);
+}
+
 .price {
   font-family: var(--font-display);
   font-size: var(--text-2xl);

@@ -21,7 +21,9 @@ async function Account() {
           {user.role === "admin" ? (
             <>
               {" "}
-              <span className={styles.badge}>Admin</span>
+              <Link href="/admin" className={`${styles.badge} ${styles.badgeLink}`}>
+                Admin
+              </Link>
             </>
           ) : null}
         </p>
