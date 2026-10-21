@@ -21,7 +21,7 @@ export default function Footer() {
                 <Link href="/courses">Courses</Link>
               </li>
               <li>
-                <Link href="/live-coaching">Live coaching</Link>
+                <Link href="/online-access">Online access</Link>
               </li>
               <li>
                 <Link href="/about">About Lou</Link>

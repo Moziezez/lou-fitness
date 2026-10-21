@@ -193,6 +193,12 @@
   gap: var(--space-4);
 }
 
+.timeInputs {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
 @media (min-width: 640px) {
   .sessionRow {
     grid-template-columns: 1fr 1fr 0.6fr;

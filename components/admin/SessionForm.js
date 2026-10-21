@@ -7,13 +7,17 @@ import { saveSession } from "@/lib/courses/actions";
 import pageStyles from "@/app/pages.module.css";
 import styles from "./admin.module.css";
 
+const HOURS = Array.from({ length: 24 }, (_, hour) => String(hour).padStart(2, "0"));
+// Dates start on the quarter hour; saveSession() enforces the same list.
+const MINUTES = ["00", "15", "30", "45"];
+
 /**
  * Add/edit form for one date of a course. `session` is omitted when adding.
  * Times arrive already converted to "YYYY-MM-DDTHH:mm" Kingston time.
  * @param {{
  *   courseId: string,
  *   session?: {
- *     id: string, startsAt: string, endsAt: string, location: string | null,
+ *     id: string, startsAt: string, location: string | null,
  *     capacity: number | null, published: boolean, reserved: number
  *   }
  * }} props
@@ -22,7 +26,6 @@ export default function SessionForm({ courseId, session }) {
   const [state, formAction, pending] = useActionState(saveSession, {});
   const values = state.values ?? {
     startsAt: session?.startsAt ?? "",
-    endsAt: session?.endsAt ?? "",
     location: session?.location ?? "",
     capacity: session?.capacity == null ? "" : String(session.capacity),
     published: !session || session.published ? "on" : "",
@@ -49,23 +52,48 @@ export default function SessionForm({ courseId, session }) {
 
       <div key={formKey} className={pageStyles.form}>
         <div className={styles.sessionRow}>
-          <Field label="Starts" error={fieldErrors.startsAt}>
+          <Field label="Date" error={fieldErrors.startsAt}>
             <input
               className={pageStyles.input}
-              type="datetime-local"
-              name="startsAt"
-              defaultValue={values.startsAt}
+              type="date"
+              name="startsDate"
+              defaultValue={values.startsAt.slice(0, 10)}
               required
             />
           </Field>
-          <Field label="Ends" error={fieldErrors.endsAt}>
-            <input
-              className={pageStyles.input}
-              type="datetime-local"
-              name="endsAt"
-              defaultValue={values.endsAt}
-              required
-            />
+          <Field label="Start time">
+            <span className={styles.timeInputs}>
+              <select
+                className={pageStyles.input}
+                name="startsHour"
+                aria-label="Hour"
+                defaultValue={values.startsAt.slice(11, 13)}
+                required
+              >
+                <option value="" disabled>
+                  --
+                </option>
+                {HOURS.map((hour) => (
+                  <option key={hour} value={hour}>
+                    {hour}
+                  </option>
+                ))}
+              </select>
+              :
+              <select
+                className={pageStyles.input}
+                name="startsMinute"
+                aria-label="Minute"
+                defaultValue={values.startsAt.slice(14, 16) || "00"}
+                required
+              >
+                {MINUTES.map((minute) => (
+                  <option key={minute} value={minute}>
+                    {minute}
+                  </option>
+                ))}
+              </select>
+            </span>
           </Field>
           <Field label="Max seats" error={fieldErrors.capacity}>
             <input

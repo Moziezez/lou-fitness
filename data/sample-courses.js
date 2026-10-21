@@ -133,7 +133,6 @@ export function formatPrice(priceCents, currency = "USD") {
 
 export function formatSessionRange(session, locale = "en-US") {
   const start = new Date(session.startsAt);
-  const end = new Date(session.endsAt);
   const date = new Intl.DateTimeFormat(locale, {
     weekday: "short",
     year: "numeric",
@@ -146,7 +145,10 @@ export function formatSessionRange(session, locale = "en-US") {
     minute: "2-digit",
     timeZone: session.timezone,
   });
-  return `${date} · ${time.format(start)} – ${time.format(end)} (${session.timezone})`;
+  const range = session.endsAt
+    ? `${time.format(start)} – ${time.format(new Date(session.endsAt))}`
+    : time.format(start);
+  return `${date} · ${range} (${session.timezone})`;
 }
 
 export function seatsLeft(session) {

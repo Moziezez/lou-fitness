@@ -61,7 +61,6 @@ async function EditCourse({ params, searchParams }) {
             session={{
               id: session.id,
               startsAt: toLocalInput(session.starts_at, session.timezone),
-              endsAt: toLocalInput(session.ends_at, session.timezone),
               location: session.location,
               capacity: session.capacity,
               published: session.published,

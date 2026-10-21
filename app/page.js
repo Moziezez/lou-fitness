@@ -35,8 +35,8 @@ export default async function HomePage() {
           </p>
           <div className={styles.ctaRow}>
             <Button href="/courses">Browse courses</Button>
-            <Button href="/live-coaching" variant="secondary">
-              Book live coaching
+            <Button href="/online-access" variant="secondary">
+              Join online
             </Button>
           </div>
         </div>

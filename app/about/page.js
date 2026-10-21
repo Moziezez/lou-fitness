@@ -14,8 +14,7 @@ export default function AboutPage() {
           <span className="eyebrow">About</span>
           <h1>Lou Shine</h1>
           <p className="lead">
-            Personal coach based in Kingston, Jamaica — Cherry Gardens. Example
-            biography for the Lou Fitness platform.
+            Personal coach based in Kingston, Jamaica. Over 10 years of experience in fitness coaching.
           </p>
         </div>
       </section>
@@ -25,7 +24,7 @@ export default function AboutPage() {
           <div className={styles.stack}>
             <h2>A warm, practical path to fitness</h2>
             <p>
-              Example content: Lou helps people build a weekly fitness routine
+              Lou helps people build a weekly fitness routine
               they can enjoy. Sessions mix clear coaching, approachable movement,
               and encouragement — get in shape with a smile.
             </p>
@@ -51,7 +50,7 @@ export default function AboutPage() {
               <li className={styles.listItem}>
                 <strong>Local roots</strong>
                 <span className={styles.note}>
-                  Grounded in Kingston / Cherry Gardens, with online access for
+                  Grounded in Kingston, with online access for
                   flexible practice.
                 </span>
               </li>
@@ -64,7 +63,7 @@ export default function AboutPage() {
               <strong>Coach:</strong> Lou Shine (example profile)
             </p>
             <p>
-              <strong>Location:</strong> Kingston, Jamaica · Cherry Gardens
+              <strong>Location:</strong> Kingston, Jamaica
             </p>
             <p>
               <strong>Offers:</strong> Online courses · Group sessions · Live coaching

@@ -14,6 +14,10 @@ const nextConfig = {
       ? [new URL(`${supabaseUrl}/storage/v1/object/public/course-images/**`)]
       : [],
   },
+  // The page was renamed; keep old links working.
+  async redirects() {
+    return [{ source: "/live-coaching", destination: "/online-access", permanent: true }];
+  },
   experimental: {
     serverActions: {
       // Course images are capped at 5 MB; leave room for the other fields.
