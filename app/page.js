@@ -30,7 +30,7 @@ export default async function HomePage() {
           <h1 className={styles.brand}>Lou Fitness</h1>
           <p className={styles.headline}>Get in shape with a smile.</p>
           <p className={styles.support}>
-            Personal coaching with Lou Shine in Kingston, Jamaica — Cherry Gardens.
+            Personal coaching with Lou in Kingston, Jamaica.
             Weekly routines, online courses, and live sessions with fixed dates.
           </p>
           <div className={styles.ctaRow}>

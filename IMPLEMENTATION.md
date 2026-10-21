@@ -1,33 +1,30 @@
 # Lou Fitness — Implementierungsplan
 
-Personal-Coaching-Plattform für **Lou Shine** (Kingston, Jamaica / Cherry Gardens).  
+Personal-Coaching-Plattform für **Lou Shine** (Kingston, Jamaica).  
 Online-Kurse und Live-Coaching mit festen Terminen, Registrierung, Buchung und Vorauszahlung.
 
 ## Zahlungsanbieter — Recherche (Stand Setup)
 
-### PayNowPro ([Docs](https://paynowpro.com/docs)) — empfohlen als Primärziel
+### WiPay Caribbean ([wipaycaribbean.com](https://wipaycaribbean.com)) — gewählter Anbieter
 
-- Jamaika-basiert, REST API über Powertranz (`https://api.paynowpro.com/api/v1`, Header `api-key`).
-- **Payment Intents:** Server erstellt Intent → Redirect zum gehosteten Checkout → Return-URL.
-- **Webhooks:** u. a. `standardTransaction`, `collect`, `reversal` (Signatur-Details in der Provider-Doku zu bestätigen, sobald Keys vorliegen).
-- Passt geografisch und fachlich gut zu Lou Shine (Kingston).
-
-### Fygaro ([Links API](https://help.fygaro.com/en-us/article/fygaro-links-integration-api-h78p9y/), [Hooks](https://help.fygaro.com/en-us/article/payment-button-hook-1wkui1k/))
-
-- Checkout über Payment Buttons / Links; Beträge per Query oder **JWT (HS256)** (Pro-Plan).
-- **Webhooks:** `Fygaro-Signature` + `Fygaro-Key-ID`, HMAC-SHA256 über `timestamp.rawBody`, Replay-Fenster ~300s.
-- Payload u. a. `transactionId`, `customReference`, `amount`, `currency`.
-- Node-Helper: `@fygaro/webhook`.
+- Karibischer Zahlungsdienstleister mit eigener Jamaika-Instanz (`jm.wipayfinancial.com`), JMD und USD.
+- **Hosted Checkout:** Server sendet `POST https://jm.wipayfinancial.com/plugins/payments/request`
+  (u. a. `account_number`, `country_code=JM`, `currency`, `environment=sandbox|live`, `fee_structure`,
+  `method=credit_card`, `order_id`, `origin`, `response_url`, `total` mit 2 Nachkommastellen) → Antwort enthält `url` → Redirect.
+- **Rückmeldung:** WiPay leitet auf `response_url` zurück mit `status`, `order_id`, `transaction_id`, `total`, `hash`.
+  Prüfung serverseitig: `hash === md5(transaction_id + total + API_KEY)` (timing-safe), danach Betrag/Währung gegen die DB abgleichen.
+- Kartendaten bleiben vollständig bei WiPay (kein PCI-Scope bei uns).
+- Sandbox über `environment=sandbox`; Live-Zugang erfordert ein verifiziertes WiPay-Business-Konto (Developer-Bereich im Dashboard).
+- Bekannte Eigenheit: WiPay hängt Parameter teils fehlerhaft an eine `response_url` mit vorhandenem Query-String an → `response_url` ohne Query bauen, Zuordnung über `order_id`.
 
 ### Architekturentscheidung
 
 Austauschbare Schnittstelle unter `lib/payments/`:
 
-| Provider   | Status                                      |
-|------------|---------------------------------------------|
-| `test`     | Entwicklungsmodus (klar gekennzeichnet)     |
-| `paynowpro`| Adapter vorbereitet, Credentials fehlen     |
-| `fygaro`   | Adapter vorbereitet, Credentials fehlen     |
+| Provider | Status                                       |
+|----------|----------------------------------------------|
+| `test`   | Entwicklungsmodus (klar gekennzeichnet)      |
+| `wipay`  | Adapter-Stub vorbereitet, Implementierung + Credentials fehlen |
 
 Simulierte Testzahlungen gelten **niemals** als echte, bestätigte Zahlungen.
 
@@ -66,7 +63,7 @@ supabase/migrations/ # SQL-Schema + RLS
 ## Offene Voraussetzungen
 
 - Supabase-Projekt (URL, anon key, service role)
-- PayNowPro- oder Fygaro-API-Credentials + Webhook-Secret
+- WiPay-Business-Konto (Jamaika): Account Number + API Key (Sandbox und Live)
 - Domain / Vercel-Projekt
 - Echtes Impressum / Datenschutz (aktuell nur Platzhalter)
 

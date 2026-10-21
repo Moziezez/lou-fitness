@@ -1,14 +1,14 @@
 # Lou Fitness
 
-Personal coaching platform for **Lou Shine** (Kingston, Jamaica / Cherry Gardens).  
-Next.js (App Router, JavaScript) · Supabase · swappable payments (PayNowPro / Fygaro / test).
+Personal coaching platform for **Lou Shine** (Kingston, Jamaica).  
+Next.js (App Router, JavaScript) · Supabase · swappable payments (WiPay / test).
 
 ## Current status (Milestone 1)
 
 - Next.js app scaffold and folder structure
 - Warm earth-tone design system (CSS variables + CSS Modules)
 - Public pages with **example** content
-- Payment provider interface + adapters (test live; PayNowPro/Fygaro stubs)
+- Payment provider interface + adapters (test live; WiPay stub)
 - Draft SQL schema under `supabase/migrations/`
 
 **Not yet:** live Supabase Auth, real bookings, confirmed payments, customer/admin dashboards.
@@ -33,7 +33,7 @@ Copy `.env.example` → `.env.local`. Never commit secrets.
 |----------|---------|
 | `NEXT_PUBLIC_SUPABASE_*` | Browser-safe Supabase keys |
 | `SUPABASE_SERVICE_ROLE_KEY` | Server only |
-| `PAYMENT_PROVIDER` | `test` \| `paynowpro` \| `fygaro` |
+| `PAYMENT_PROVIDER` | `test` \| `wipay` |
 | Provider secrets | See `.env.example` |
 
 ## Design

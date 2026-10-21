@@ -8,7 +8,7 @@ export default function Footer() {
         <div>
           <p className={styles.brand}>Lou Fitness</p>
           <p className={styles.blurb}>
-            Personal coaching with Lou Shine — Kingston, Jamaica (Cherry Gardens).
+            Personal coaching with Lou Patterson — Kingston, Jamaica.
             Start your weekly fitness routine and get in shape with a smile.
           </p>
         </div>
