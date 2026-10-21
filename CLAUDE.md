@@ -29,8 +29,9 @@ There is no test suite. Copy `.env.example` to `.env.local` before running. `GET
 - `components/layout` (Header is the only Client Component; Footer) and `components/ui` (`Button`, which renders a `Link` when given `href`, and `CourseCard`).
 - `data/sample-courses.js`: **example data** used by the public pages until the Supabase tables are wired in. It also exports the helpers `getPublishedCourses`, `getCourseBySlug`, `formatPrice`, `formatSessionRange` and `seatsLeft`.
 - `lib/supabase/`: `client.js` (browser client) and `server.js` (async, cookie-based server client). Both use `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`. A service-role `admin.js` is planned. It must be server-only and never imported from a Client Component.
+- `lib/courses/`: `admin.js` (server reads for the admin area), `actions.js` (Server Action `saveCourse`, checks `requireAdmin()` from `lib/auth/session.js`), `formats.js` (format values and labels, safe for Client Components). Admin UI: `app/admin/courses` (list, `new`, `[id]` edit) with `components/admin/`.
 - `lib/payments/`: a swappable provider interface. `getPaymentProvider()` picks `test`, `paynowpro` or `fygaro` from `PAYMENT_PROVIDER` (default `test`). Each provider implements `createCheckout`, `verifyWebhook` and `getPaymentStatus`. The PayNowPro and Fygaro adapters are stubs that throw until credentials exist.
-- `supabase/migrations/`: `0001_init.sql` creates the tables `profiles`, `courses`, `sessions`, `bookings` and `payments`, the `private` helper schema, `updated_at` triggers, the profile-on-signup trigger and RLS. `0002_merge_read_policies.sql` merges the per-table SELECT policies. Both are applied to project `eydfotinnemasvrwntpa` (via the Supabase MCP in `.mcp.json`; no local CLI stack). Once a migration has been applied, don't edit it; add a new forward migration instead.
+- `supabase/migrations/`: `0001_init.sql` creates the tables `profiles`, `courses`, `sessions`, `bookings` and `payments`, the `private` helper schema, `updated_at` triggers, the profile-on-signup trigger and RLS. `0002_merge_read_policies.sql` merges the per-table SELECT policies. `0003_admin_course_writes.sql` adds `courses.summary`, a slug format check and admin-only INSERT/UPDATE on `courses` (no DELETE; unpublish instead). All three are applied to project `eydfotinnemasvrwntpa` (via the Supabase MCP in `.mcp.json`; no local CLI stack). Once a migration has been applied, don't edit it; add a new forward migration instead.
 
 ### Known model mismatch
 
@@ -41,6 +42,8 @@ The sample data doesn't match the DB schema yet, so map the fields when you swit
 | `priceCents` (payment types also use `amountCents`) | `price_minor_units`, `amount_minor_units` |
 | `format: "group" \| "online"` | `format in ('online_course','live_coaching')` |
 | `seatsTaken` | not stored; derive it from `bookings` |
+| `summary` | `summary` (nullable, max 300 chars) |
+| `imageHint` | not stored |
 
 ## Invariants (security and payments)
 
@@ -53,7 +56,7 @@ The sample data doesn't match the DB schema yet, so map the fields when you swit
 
 ## Status
 
-Milestones 1–3 are done: scaffold, design system, public pages with example content, payment interface, the Supabase schema with RLS, and Supabase Auth (register with email confirmation, login, logout, password reset; `lib/auth/`, `app/auth/confirm`; `proxy.js` redirects signed-out users away from `/dashboard`, `/admin`, `/reset-password/update`, and pages re-check via `getCurrentUser()`). The pages still read from `data/sample-courses.js`. The following are still **UI shells or not started**: real bookings, payment flow and webhooks, the customer dashboard, the admin area, and real legal pages (imprint, privacy, terms and withdrawal are placeholders). See the milestone table in IMPLEMENTATION.md.
+Milestones 1–3 are done: scaffold, design system, public pages with example content, payment interface, the Supabase schema with RLS, and Supabase Auth (register with email confirmation, login, logout, password reset; `lib/auth/`, `app/auth/confirm`; `proxy.js` redirects signed-out users away from `/dashboard`, `/admin`, `/reset-password/update`, and pages re-check via `getCurrentUser()`). Admins can create and edit courses at `/admin/courses`, but the public pages still read from `data/sample-courses.js`, so DB courses don't show on the site yet. The following are still **UI shells or not started**: real bookings, payment flow and webhooks, the customer dashboard, the admin area, and real legal pages (imprint, privacy, terms and withdrawal are placeholders). See the milestone table in IMPLEMENTATION.md.
 
 ## Styling
 

@@ -1,6 +1,6 @@
 # Supabase-Datenbankschema
 
-Projekt: `eydfotinnemasvrwntpa` (siehe `.mcp.json`). Beide Migrationen sind dort
+Projekt: `eydfotinnemasvrwntpa` (siehe `.mcp.json`). Alle Migrationen sind dort
 angewendet (Stand 2026-10-21) und in der Migrationshistorie des Projekts
 eingetragen.
 
@@ -8,12 +8,13 @@ eingetragen.
 |---|---|
 | [`0001_init.sql`](./migrations/0001_init.sql) | Tabellen `profiles`, `courses`, `sessions`, `bookings`, `payments`, Indizes, Schema `private` mit `is_admin()`, `set_updated_at()`-Trigger, Profil-Anlage bei Registrierung, RLS und Spaltenrechte |
 | [`0002_merge_read_policies.sql`](./migrations/0002_merge_read_policies.sql) | Fasst je Tabelle die Lese-Policies (eigene/veröffentlichte + Admin) zu einer zusammen; gleiche Rechte, bessere Performance |
+| [`0003_admin_course_writes.sql`](./migrations/0003_admin_course_writes.sql) | Spalte `courses.summary`, Slug-Formatprüfung, INSERT/UPDATE auf `courses` nur für Admins (Spaltenrechte + RLS). Kein DELETE: Kurse werden depubliziert |
 
 ## Zugriffsmodell
 
-- **Nur Lesen** für `anon`/`authenticated`. Es gibt keine INSERT-, UPDATE- oder
-  DELETE-Rechte; Schreibpfade laufen später über Servercode mit expliziter
-  Autorisierung (Service-Role-Client oder eng begrenzte Policies).
+- **Nur Lesen** für `anon`/`authenticated`, mit einer Ausnahme: Admins dürfen
+  Kurse anlegen und ändern (`0003`). Weitere Schreibpfade laufen über Servercode
+  mit expliziter Autorisierung (Service-Role-Client oder eng begrenzte Policies).
 - `anon` sieht veröffentlichte Kurse und veröffentlichte Termine
   veröffentlichter Kurse. Angemeldete Nutzer sehen zusätzlich ihr eigenes
   Profil und ihre eigenen Buchungen. Zahlungen sieht nur der Admin.
