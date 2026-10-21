@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Button from "@/components/ui/Button";
@@ -78,7 +79,18 @@ export default async function CourseDetailPage({ params }) {
             </p>
           </div>
 
-          <aside className={styles.panel}>
+          <aside className={`${styles.panel} ${styles.stack}`}>
+            {course.imageUrl ? (
+              <div className={styles.courseImage}>
+                <Image
+                  src={course.imageUrl}
+                  alt={course.title}
+                  fill
+                  preload
+                  sizes="(min-width: 900px) 35vw, 100vw"
+                />
+              </div>
+            ) : null}
             <h2>Details</h2>
             <p>
               <strong>Format:</strong> {format}

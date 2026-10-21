@@ -1,10 +1,12 @@
 "use client";
 
 import { useActionState } from "react";
+import Image from "next/image";
 import Button from "@/components/ui/Button";
 import FormMessage from "@/components/auth/FormMessage";
 import { saveCourse } from "@/lib/courses/actions";
 import { COURSE_FORMATS } from "@/lib/courses/formats";
+import { courseImageUrl, IMAGE_ACCEPT } from "@/lib/courses/images";
 import pageStyles from "@/app/pages.module.css";
 import styles from "./admin.module.css";
 
@@ -32,6 +34,7 @@ export default function CourseForm({ course }) {
 
   // Remount the fields after each submission so defaultValue refills them.
   const formKey = JSON.stringify(values);
+  const imageUrl = courseImageUrl(course?.image_path);
 
   return (
     <form className={pageStyles.form} action={formAction}>
@@ -116,6 +119,35 @@ export default function CourseForm({ course }) {
             />
           </Field>
         </div>
+
+        <Field
+          label="Image"
+          hint={
+            imageUrl
+              ? "Choose a file to replace the current image. JPEG, PNG or WebP, up to 5 MB."
+              : "Shown on the course card and page. JPEG, PNG or WebP, up to 5 MB. Optional."
+          }
+          error={fieldErrors.image}
+        >
+          {imageUrl ? (
+            <Image
+              className={styles.imagePreview}
+              src={imageUrl}
+              alt="Current course image"
+              width={640}
+              height={400}
+              sizes="20rem"
+            />
+          ) : null}
+          <input className={pageStyles.input} type="file" name="image" accept={IMAGE_ACCEPT} />
+        </Field>
+
+        {imageUrl ? (
+          <label className={styles.checkbox}>
+            <input type="checkbox" name="removeImage" />
+            <span>Remove current image</span>
+          </label>
+        ) : null}
 
         <label className={styles.checkbox}>
           <input type="checkbox" name="published" defaultChecked={values.published === "on"} />

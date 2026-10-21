@@ -28,6 +28,18 @@
   background: color-mix(in srgb, var(--color-bg-elevated) 90%, white);
 }
 
+.courseImage {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--color-bg-muted);
+}
+
+.courseImage img {
+  object-fit: cover;
+}
+
 .grid {
   display: grid;
   gap: var(--space-5);

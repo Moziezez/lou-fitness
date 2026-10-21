@@ -39,12 +39,17 @@
 }
 
 .media {
+  position: relative;
   aspect-ratio: 16 / 10;
   border-radius: var(--radius-md);
   background:
     linear-gradient(145deg, rgba(166, 124, 82, 0.35), rgba(111, 127, 92, 0.25)),
     linear-gradient(180deg, var(--color-sand), var(--color-bg-muted));
   overflow: hidden;
+}
+
+.image {
+  object-fit: cover;
 }
 
 .format {
